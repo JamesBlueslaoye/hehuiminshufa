@@ -16,7 +16,7 @@ export default function Home() {
   const loadWorks = useCallback(async () => {
     setLoading(true)
     try {
-      const res = await fetch('/data/classic/works.json')
+      const res = await fetch('/works.json')
       const worksMap: Record<string, Record<string, string>> = await res.json()
       const items: WorkItem[] = []
       for (let i = 1; i <= 50; i++) {
@@ -45,7 +45,7 @@ export default function Home() {
   const loadZpzsWorks = useCallback(async () => {
     setLoadingZpzs(true)
     try {
-      const res = await fetch('/data/gallery/works.json')
+      const res = await fetch('/zpzs/works.json')
       const worksMap: Record<string, Record<string, string>> = await res.json()
       const items: WorkItem[] = Object.entries(worksMap).map(([fileName, detail]) => ({
         key: `zpzs/${fileName}`,

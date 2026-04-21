@@ -1,6 +1,6 @@
 /**
  * 构建楚简字库索引脚本
- * 在 next build 之前运行，生成 public/data/search/index.json
+ * 在 next build 之前运行，生成 public/search-index.json
  */
 import COS from 'cos-nodejs-sdk-v5';
 import fs from 'fs';
@@ -114,7 +114,7 @@ async function buildIndex() {
   // 构建全局简繁体映射（在构建时完成，前端不需要 opencc-js）
   // 这里先留空，后面可以用 opencc-js 补充
 
-  const outPath = path.join(__dirname, '..', 'public', 'data', 'search', 'index.json');
+  const outPath = path.join(__dirname, '..', 'public', 'search-index.json');
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, JSON.stringify(index), 'utf-8');
 
