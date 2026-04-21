@@ -50,6 +50,11 @@ async function listFiles(prefix) {
 
 async function buildIndex() {
   console.log('开始构建楚简字库索引...');
+  const outPath = path.join(__dirname, '..', 'public', 'search-index.json');
+  if (!process.env.TENCENT_COS_SECRET_ID || !process.env.TENCENT_COS_SECRET_KEY) {
+    console.log('未检测到 COS 凭证，跳过索引重建，保留现有 public/search-index.json');
+    return;
+  }
 
   const index = {
     version: 1,
@@ -57,64 +62,71 @@ async function buildIndex() {
     series: {},
   };
 
-  for (const series of SERIES_LIST) {
-    console.log(`  扫描 ${series}...`);
-    const files = await listFiles(`${series}/`);
-    console.log(`    找到 ${files.length} 个文件`);
+  try {
+    for (const series of SERIES_LIST) {
+      console.log(`  扫描 ${series}...`);
+      const files = await listFiles(`${series}/`);
+      console.log(`    找到 ${files.length} 个文件`);
 
-    const charMap = new Map(); // char -> [{key, fileName, index}]
-    const converter = opencc.Converter({ from: 'cn', to: 'tw' });
+      const charMap = new Map(); // char -> [{key, fileName, index}]
+      const converter = opencc.Converter({ from: 'cn', to: 'tw' });
 
-    for (const key of files) {
-      const fileName = key.split('/').pop();
-      const charPart = fileName.split('_')[0];
+      for (const key of files) {
+        const fileName = key.split('/').pop();
+        const charPart = fileName.split('_')[0];
 
-      for (const c of charPart) {
-        if (/[\u4e00-\u9fa5]/.test(c)) {
-          const parts = fileName.replace('.png', '').split('_');
-          const idx = parts.length >= 3 ? parts[parts.length - 1] : '1';
-          const item = { key, fileName, index: idx };
+        for (const c of charPart) {
+          if (/[\u4e00-\u9fa5]/.test(c)) {
+            const parts = fileName.replace('.png', '').split('_');
+            const idx = parts.length >= 3 ? parts[parts.length - 1] : '1';
+            const item = { key, fileName, index: idx };
 
-          // 简体字
-          if (!charMap.has(c)) {
-            charMap.set(c, []);
-          }
-          const existing = charMap.get(c);
-          const dup = existing.find(e => e.fileName === fileName);
-          if (!dup) {
-            existing.push(item);
-          }
-
-          // 繁体字（如果不同）
-          const trad = converter(c);
-          if (trad && trad !== c) {
-            if (!charMap.has(trad)) {
-              charMap.set(trad, []);
+            // 简体字
+            if (!charMap.has(c)) {
+              charMap.set(c, []);
             }
-            const tradExisting = charMap.get(trad);
-            const tradDup = tradExisting.find(e => e.fileName === fileName);
-            if (!tradDup) {
-              tradExisting.push(item);
+            const existing = charMap.get(c);
+            const dup = existing.find(e => e.fileName === fileName);
+            if (!dup) {
+              existing.push(item);
             }
-          }
+
+            // 繁体字（如果不同）
+            const trad = converter(c);
+            if (trad && trad !== c) {
+              if (!charMap.has(trad)) {
+                charMap.set(trad, []);
+              }
+              const tradExisting = charMap.get(trad);
+              const tradDup = tradExisting.find(e => e.fileName === fileName);
+              if (!tradDup) {
+                tradExisting.push(item);
+              }
+            }
+          } 
         }
       }
-    }
 
-    // 转为普通对象
-    const seriesIndex = {};
-    for (const [char, items] of charMap) {
-      seriesIndex[char] = items;
-    }
+      // 转为普通对象
+      const seriesIndex = {};
+      for (const [char, items] of charMap) {
+        seriesIndex[char] = items;
+      }
 
-    index.series[series] = seriesIndex;
-    console.log(`    索引了 ${Object.keys(seriesIndex).length} 个汉字`);
+      index.series[series] = seriesIndex;
+      console.log(`    索引了 ${Object.keys(seriesIndex).length} 个汉字`);
+    }
+  } catch (error) {
+    if (fs.existsSync(outPath)) {
+      console.warn('索引重建失败，已保留现有 public/search-index.json：', error?.message || error);
+      return;
+    }
+    throw error;
   }
 
   // 构建全局简繁体映射（在构建时完成，前端不需要 opencc-js）
   // 这里先留空，后面可以用 opencc-js 补充
 
-  const outPath = path.join(__dirname, '..', 'public', 'search-index.json');
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, JSON.stringify(index), 'utf-8');
 
