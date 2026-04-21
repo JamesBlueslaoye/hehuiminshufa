@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import './globals.css'
+import '@/styles/globals.css'
 
 export const metadata: Metadata = {
   title: '何慧敏书法 — 楚简书法艺术',

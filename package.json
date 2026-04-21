@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "node scripts/build-index.mjs && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "cos-nodejs-sdk-v5": "^2.15.4",
@@ -24,6 +26,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.35",
     "postcss": "^8.4.0",
+    "prettier": "^3.6.2",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.5.0"
   }
