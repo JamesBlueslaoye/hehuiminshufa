@@ -29,7 +29,7 @@ export default function Home() {
   const loadWorks = useCallback(async () => {
     setLoading(true)
     try {
-      const res = await fetch(`${COS_BASE}/works.json`)
+      const res = await fetch(`/works.json`)
       const worksMap: Record<string, Record<string, string>> = await res.json()
       // 生成 001-050 的问道经典作品
       const items: WorkItem[] = []
@@ -61,7 +61,7 @@ export default function Home() {
   const loadZpzsWorks = useCallback(async () => {
     setLoadingZpzs(true)
     try {
-      const res = await fetch(`${COS_BASE}/zpzs/works.json`)
+      const res = await fetch(`/zpzs/works.json`)
       const worksMap: Record<string, Record<string, string>> = await res.json()
       const items: WorkItem[] = Object.entries(worksMap).map(([fileName, detail]) => ({
         key: `zpzs/${fileName}`,
@@ -107,7 +107,7 @@ export default function Home() {
           </a>
           <div className="flex items-center gap-6">
             <a href="/search" className="text-white/80 text-xs hover:text-white transition-colors no-underline">
-              字形查询
+              楚简查字
             </a>
             <a href="#works" className="text-white/80 text-xs hover:text-white transition-colors no-underline">
               作品展示
@@ -135,7 +135,7 @@ export default function Home() {
               href="/search"
               className="inline-block bg-apple-blue text-white px-6 py-2 rounded-pill text-[17px] font-normal no-underline hover:opacity-90 transition-opacity"
             >
-              字形查询
+              楚简查字
             </a>
             <a
               href="#works"
@@ -260,7 +260,7 @@ export default function Home() {
             <div>
               <h4 className="text-[14px] font-semibold tracking-[-0.224px] text-apple-near-black mb-3">快速链接</h4>
               <ul className="space-y-2 text-[14px] tracking-[-0.224px]">
-                <li><a href="/search" className="text-apple-link-blue hover:underline no-underline">字形查询</a></li>
+                <li><a href="/search" className="text-apple-link-blue hover:underline no-underline">楚简查字</a></li>
                 <li><a href="#works" className="text-apple-link-blue hover:underline no-underline">作品展示</a></li>
                 <li><a href="#about" className="text-apple-link-blue hover:underline no-underline">关于楚简</a></li>
               </ul>
