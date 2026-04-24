@@ -1,6 +1,6 @@
 /**
  * 构建楚简字库索引脚本
- * 在 next build 之前运行，生成 public/search-index.json
+ * 在 next build 之前运行，生成 public/search/search-index.json
  */
 import COS from 'cos-nodejs-sdk-v5';
 import fs from 'fs';
@@ -50,9 +50,9 @@ async function listFiles(prefix) {
 
 async function buildIndex() {
   console.log('开始构建楚简字库索引...');
-  const outPath = path.join(__dirname, '..', 'public', 'search-index.json');
+  const outPath = path.join(__dirname, '..', 'public', 'search', 'search-index.json');
   if (!process.env.TENCENT_COS_SECRET_ID || !process.env.TENCENT_COS_SECRET_KEY) {
-    console.log('未检测到 COS 凭证，跳过索引重建，保留现有 public/search-index.json');
+    console.log('未检测到 COS 凭证，跳过索引重建，保留现有 public/search/search-index.json');
     return;
   }
 
@@ -118,7 +118,7 @@ async function buildIndex() {
     }
   } catch (error) {
     if (fs.existsSync(outPath)) {
-      console.warn('索引重建失败，已保留现有 public/search-index.json：', error?.message || error);
+      console.warn('索引重建失败，已保留现有 public/search/search-index.json：', error?.message || error);
       return;
     }
     throw error;

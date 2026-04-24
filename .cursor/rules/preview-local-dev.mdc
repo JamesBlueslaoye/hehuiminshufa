@@ -1,0 +1,14 @@
+---
+description: 用户说「预览」时自动起本地 dev 并打开浏览器
+alwaysApply: true
+---
+
+# 本地预览（用户说「预览」时）
+
+当用户表达要**预览**站点（例如：预览、preview、看一下效果、打开本地）时，在本仓库根目录执行：
+
+1. **若 3000 端口尚无 Next 在跑**：后台启动 `pnpm dev`，用终端输出等到出现 `Ready` 或 `Local:`。
+2. **在 macOS 上**：执行 `open http://localhost:3000` 用系统默认浏览器打开（若项目 `package.json` 里 dev 使用了其它端口，以终端里 `Local:` 为准）。
+3. **若 dev 已在跑**：直接 `open http://localhost:3000`（或当前终端里打印的 Local URL），无需再起第二个 dev。
+
+不要只文字说明「请自行运行 pnpm dev」，应直接代用户起服务并打开浏览器。

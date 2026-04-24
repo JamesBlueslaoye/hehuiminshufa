@@ -57,7 +57,7 @@ export function useSearchChat() {
     setMessages([{
       id: 'welcome',
       role: 'assistant',
-      content: '欢迎使用楚简书法字库查询！\n\n请输入你想查询的汉字，我会为你展示各系列楚简中的写法。\n\n收录系列：郭店楚简、包山楚简、清华简、上博楚简',
+      content: '输入你想查询的字，我将为你展示楚简文字的写法',
       timestamp: new Date(),
     }])
   }, [])
