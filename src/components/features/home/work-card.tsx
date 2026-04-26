@@ -21,12 +21,12 @@ export function WorkCard({ work, onClick }: WorkCardProps) {
           loading="lazy"
         />
       </div>
-      <div className="p-4">
-        <h3 className="font-display text-[17px] font-semibold leading-[1.24] tracking-[-0.374px] text-apple-near-black mb-1 line-clamp-2">
+      <div className="p-3 sm:p-4">
+        <h3 className="font-display text-[15px] sm:text-[17px] font-semibold leading-[1.24] tracking-[-0.374px] text-apple-near-black mb-1 line-clamp-2">
           {work.title}
         </h3>
         {work.source && (
-          <p className="text-[14px] tracking-[-0.224px] text-black/48 line-clamp-1">
+          <p className="text-[12px] sm:text-[14px] tracking-[-0.224px] text-black/48 line-clamp-1">
             {work.source}
           </p>
         )}

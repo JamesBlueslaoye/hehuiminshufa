@@ -25,24 +25,31 @@ export function useSearchChat() {
       .catch(() => setIndexLoading(false))
   }, [])
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (!lightbox) return
-    if (event.key === 'Escape') setLightbox(null)
-    if (event.key === 'ArrowLeft') {
-      setLightbox((previous) => {
-        if (!previous) return null
-        const index = (previous.currentIndex - 1 + previous.allImages.length) % previous.allImages.length
-        return { ...previous, ...previous.allImages[index], currentIndex: index }
-      })
-    }
-    if (event.key === 'ArrowRight') {
-      setLightbox((previous) => {
-        if (!previous) return null
-        const index = (previous.currentIndex + 1) % previous.allImages.length
-        return { ...previous, ...previous.allImages[index], currentIndex: index }
-      })
-    }
-  }, [lightbox])
+  const goLightboxPrev = useCallback(() => {
+    setLightbox((previous) => {
+      if (!previous || previous.allImages.length === 0) return previous
+      const index = (previous.currentIndex - 1 + previous.allImages.length) % previous.allImages.length
+      return { ...previous, ...previous.allImages[index], currentIndex: index }
+    })
+  }, [])
+
+  const goLightboxNext = useCallback(() => {
+    setLightbox((previous) => {
+      if (!previous || previous.allImages.length === 0) return previous
+      const index = (previous.currentIndex + 1) % previous.allImages.length
+      return { ...previous, ...previous.allImages[index], currentIndex: index }
+    })
+  }, [])
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (!lightbox) return
+      if (event.key === 'Escape') setLightbox(null)
+      if (event.key === 'ArrowLeft') goLightboxPrev()
+      if (event.key === 'ArrowRight') goLightboxNext()
+    },
+    [lightbox, goLightboxPrev, goLightboxNext],
+  )
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown)
@@ -147,7 +154,9 @@ export function useSearchChat() {
   }
 
   function getAllImages(results: Record<string, SearchResult[]>): LightboxImage[] {
-    return Object.entries(results).flatMap(([series, files]) => files.map((file) => ({ url: file.url, fileName: file.fileName, series })))
+    return Object.entries(results).flatMap(([series, files]) =>
+      files.map((file) => ({ url: file.url, fileName: file.fileName, series, index: file.index })),
+    )
   }
 
   return {
@@ -163,5 +172,7 @@ export function useSearchChat() {
     setExpandedSeries,
     handleSubmit,
     getAllImages,
+    goLightboxPrev,
+    goLightboxNext,
   }
 }

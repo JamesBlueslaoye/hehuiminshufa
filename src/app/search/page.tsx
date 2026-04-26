@@ -18,6 +18,8 @@ export default function SearchPage() {
     setExpandedSeries,
     handleSubmit,
     getAllImages,
+    goLightboxPrev,
+    goLightboxNext,
   } = useSearchChat()
 
   return (
@@ -45,17 +47,26 @@ export default function SearchPage() {
                         <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white text-apple-near-black border border-[#d2d2d7]">{series}</span>
                         <span className="text-xs text-black/60">{files.length} 种写法</span>
                       </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-2">
+                      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-2.5">
                         {visibleFiles.map((file, index) => {
                           const allImages = getAllImages(message.results!)
                           const currentIndex = allImages.findIndex((image) => image.url === file.url)
                           return (
                             <div
                               key={`${file.key}-${index}`}
-                              className="relative min-h-[44px] min-w-0 bg-white rounded-lg overflow-hidden border border-[#e5e5e5] cursor-pointer active:opacity-90 hover:shadow-md hover:border-apple-blue transition-all group"
-                              onClick={() => setLightbox({ url: file.url, fileName: file.fileName, series, allImages, currentIndex })}
+                              className="relative min-h-[40px] min-w-0 bg-white rounded-lg overflow-hidden border border-[#e5e5e5] cursor-pointer active:opacity-90 hover:shadow-md hover:border-apple-blue transition-all group"
+                              onClick={() =>
+                                setLightbox({
+                                  url: file.url,
+                                  fileName: file.fileName,
+                                  series,
+                                  index: file.index,
+                                  allImages,
+                                  currentIndex,
+                                })
+                              }
                             >
-                              <img src={file.url} alt={`${series} ${file.fileName}`} className="w-full aspect-square object-contain p-1.5 sm:p-1 group-hover:scale-105 transition-transform" loading="lazy" />
+                              <img src={file.url} alt={`${series} ${file.fileName}`} className="w-full aspect-square object-contain p-1 sm:p-1.5 group-hover:scale-105 transition-transform" loading="lazy" />
                               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent px-1.5 py-1">
                                 <span className="text-[10px] text-white/90">#{file.index}</span>
                               </div>
@@ -114,19 +125,57 @@ export default function SearchPage() {
 
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 sm:p-6"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-5 sm:p-8"
           onClick={() => setLightbox(null)}
         >
           <div
-            className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[min(92vw,640px)] max-h-[88vh] p-3 sm:p-5 flex flex-col items-center gap-3 sm:gap-4"
+            className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-[min(82vw,420px)] sm:max-w-[min(78vw,480px)] max-h-[82vh] min-h-0 p-3 sm:p-4 flex flex-col gap-2 sm:gap-3"
             onClick={(event) => event.stopPropagation()}
           >
-            <img
-              src={lightbox.url}
-              alt={lightbox.fileName}
-              className="max-w-full max-h-[min(68vh,520px)] sm:max-h-[60vh] object-contain rounded-lg"
-            />
-            <p className="text-xs text-black/50 text-center px-2">点击周围暗区关闭</p>
+            <div className="shrink-0 text-center px-1">
+              <p className="text-[13px] sm:text-sm font-semibold text-apple-near-black leading-snug">{lightbox.series}</p>
+            </div>
+
+            <div className="flex-1 min-h-0 flex items-center justify-center">
+              <img
+                src={lightbox.url}
+                alt={`${lightbox.series} 楚简字形`}
+                className="max-w-full max-h-[min(48vh,360px)] sm:max-h-[min(46vh,400px)] w-auto object-contain rounded-lg"
+              />
+            </div>
+
+            <div className="shrink-0 flex flex-col items-center gap-2 pt-1">
+              {lightbox.allImages.length > 1 ? (
+                <div className="flex w-full items-center justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      goLightboxPrev()
+                    }}
+                    className="min-h-[44px] min-w-[44px] rounded-full border border-[#d2d2d7] bg-white text-sm font-medium text-apple-near-black hover:bg-apple-light-gray active:scale-[0.98] transition-all"
+                    aria-label="上一张"
+                  >
+                    ←
+                  </button>
+                  <span className="text-xs text-black/45 tabular-nums">
+                    {lightbox.currentIndex + 1} / {lightbox.allImages.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      goLightboxNext()
+                    }}
+                    className="min-h-[44px] min-w-[44px] rounded-full border border-[#d2d2d7] bg-white text-sm font-medium text-apple-near-black hover:bg-apple-light-gray active:scale-[0.98] transition-all"
+                    aria-label="下一张"
+                  >
+                    →
+                  </button>
+                </div>
+              ) : null}
+              <p className="text-[11px] sm:text-xs text-black/45 text-center px-2">点击周围暗区关闭</p>
+            </div>
           </div>
         </div>
       )}

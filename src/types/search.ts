@@ -30,6 +30,8 @@ export interface LightboxImage {
   url: string
   fileName: string
   series: string
+  /** 字库条目序号（若有） */
+  index?: string
 }
 
 export interface LightboxState extends LightboxImage {
