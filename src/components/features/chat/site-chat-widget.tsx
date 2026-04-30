@@ -87,7 +87,7 @@ export function SiteChatWidget() {
       id: 'welcome',
       role: 'assistant',
       content:
-        '你好。输入单个汉字或「某字在楚简中怎么写」会先在本站字库展示字形（与搜索页相同，不调 AI）；其它问题再走 AI 助手。',
+        '你好，我是何慧敏老师的书法AI小助手，可以咨询我关于楚简书法的任何问题哦！输入单个汉字或「某字在楚简中怎么写」可以查询这个字在楚简中的写法！',
     },
   ])
   const listRef = useRef<HTMLDivElement>(null)
@@ -357,10 +357,9 @@ export function SiteChatWidget() {
         >
           <div className="flex items-center justify-between border-b border-[#e5e5e5] px-4 py-3">
             <div>
-              <p className="text-sm font-semibold text-apple-near-black">助手（查字 / AI）</p>
-              <p className="text-[11px] text-black/45">如果你想查某个字在楚简中怎么写，可以直接问我“X字在楚简中怎么写”</p>
-              <p className="text-[11px] text-black/45 truncate max-w-[260px] md:max-w-[340px]" title={CHAT_API_URL}>
-                查字优先本地字库 · AI：{CHAT_API_URL}
+              <p className="text-sm font-semibold text-apple-near-black">何老师的楚简书法AI小助手</p>
+              <p className="text-[11px] text-black/45">
+                你好，我是何慧敏老师的书法AI小助手，可以咨询我关于楚简书法的任何问题哦！输入单个汉字或「某字在楚简中怎么写」可以查询这个字在楚简中的写法！
               </p>
             </div>
             <button
