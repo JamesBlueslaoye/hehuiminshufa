@@ -16,7 +16,7 @@ export function WorkCard({ work, onClick }: WorkCardProps) {
       <div className="aspect-[4/3] bg-apple-light-gray flex items-center justify-center overflow-hidden">
         <img
           src={work.url}
-          alt={work.title}
+          alt={`${work.title?.trim() || '楚简字形'}｜何慧敏书法｜楚简书法`}
           className="max-w-[90%] max-h-[90%] object-contain transition-transform group-hover:scale-105"
           loading="lazy"
         />

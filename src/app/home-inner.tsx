@@ -389,7 +389,7 @@ export function HomeInner() {
             <div className="flex-1 flex items-center justify-center bg-black/50 p-3 sm:p-4 md:p-8">
               <img
                 src={lightboxWork.url}
-                alt={lightboxWork.title}
+                alt={`${lightboxWork.title?.trim() || '楚简字形'}｜何慧敏书法｜楚简书法`}
                 className="max-w-full max-h-[min(56vh,520px)] sm:max-h-[60vh] object-contain cursor-zoom-in rounded-lg"
                 onClick={openZoom}
               />
@@ -461,7 +461,7 @@ export function HomeInner() {
             <div className="flex min-h-0 flex-1 cursor-zoom-out items-center justify-center" onClick={exitZoomOnly}>
               <img
                 src={lightboxWork.url}
-                alt={lightboxWork.title}
+                alt={`${lightboxWork.title?.trim() || '楚简字形'}｜何慧敏书法｜楚简书法`}
                 className="max-h-[min(52vh,420px)] sm:max-h-[min(50vh,480px)] max-w-full object-contain"
               />
             </div>
